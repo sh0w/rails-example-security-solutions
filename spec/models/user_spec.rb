@@ -22,4 +22,25 @@ describe User do
     u2.should be_nil
   end
 
+  it "should not save password as plain text" do
+    password = "secretpassword"
+    u = User.create!( :name => "dummy", :email => "foo@bar.com", :password => password )
+
+    find_u = User.find_by_email("foo@bar.com")
+    find_u.password.should_not eql(password)
+    find_u.password.should be_nil
+  end
+
+  it "should save password salted and hashed" do
+    password = "secretpassword"
+    User.create!( :name => "dummy", :email => "foo@bar.com", :password => password )
+
+    find_u = User.find_by_email("foo@bar.com")
+
+    User.find_by_email("foo@bar.com").password_hash.should_not eql(password)
+    User.find_by_email("foo@bar.com").password_hash.should eql(BCrypt::Engine.hash_secret(password, find_u.password_salt))
+  end
+
+
+
 end

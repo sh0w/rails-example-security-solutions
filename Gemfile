@@ -24,3 +24,4 @@ group :development, :test do
   gem 'rake'
 end
 
+gem "bcrypt-ruby", :require => "bcrypt"
